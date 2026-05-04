@@ -1,9 +1,4 @@
 {
-  “id”: “cmd_final_test_20260504
-  “type”: “command”,
-  “content”: “记事本”
-}
-{
-  "id": "test_20260505_001",
+  "id": "test_20260505_002",
   "command": "notepad"
 }
