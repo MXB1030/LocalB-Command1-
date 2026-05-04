@@ -1,0 +1,6 @@
+命令.json
+{
+  "id": "cmd_001_test",
+  "type": "command",
+  "content": "calc"
+}
