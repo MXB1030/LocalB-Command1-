@@ -1,5 +1,9 @@
 {
-  "id": "cmd_final_test_20260504",
-  "type": "command",
-  "content": "notepad"
+  “id”: “cmd_final_test_20260504
+  “type”: “command”,
+  “content”: “记事本”
+}
+{
+  "id": "test_001",
+  "command": "calc"
 }
