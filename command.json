@@ -1,4 +1,8 @@
 {
-  "id": "test_20260505_002",
-  "command": "notepad"
+  "id": "self_upgrade_test_20260505_v16.1",
+  "type": "SELF_UPGRADE",
+  "command": "SELF_UPGRADE",
+  "version": "16.1",
+  "description": "第一次真正的自我升级测试：新增每日凌晨2点自动备份记忆文件功能",
+  "content": "这里把LocalB_v16.1_每日自动备份版.py的完整代码全选复制粘贴进来"
 }
