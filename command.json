@@ -4,5 +4,98 @@
   "command": "SELF_UPGRADE",
   "version": "16.1",
   "description": "第一次真正的自我升级测试：新增每日凌晨2点自动备份记忆文件功能",
-  "content": "这里把LocalB_v16.1_每日自动备份版.py的完整代码全选复制粘贴进来"
+  "content": "try:
+headers = {
+"Authorization": f"Bearer {QWEN_API_KEY}",
+"Content-Type": "application/json"
+}
+data = {
+"model": QWEN_MODEL,
+"messages": [
+{"role": "system", "content": system_prompt},
+{"role": "user", "content": user_prompt}
+],
+"temperature": 0.7
+}
+response = requests.post(QWEN_API_URL, headers=headers, json=data, timeout=180)
+result = response.json()
+ai_code = result["choices"][0]["message"]["content"]
+ai_code = ai_code.replace('python', '').replace('', '')
+ai_response_text.delete(1.0, tk.END)
+ai_response_text.insert(tk.END, ai_code)
+log("✅ 千问API调用成功！完整代码已生成")
+save_memory("千问生成代码", {
+"需求": user_prompt,
+"代码长度": len(ai_code)
+})
+except Exception as e:
+log(f"❌ 千问API调用失败: {e}")
+ai_response_text.delete(1.0, tk.END)
+ai_response_text.insert(tk.END, f"调用失败：{e}")
+def copy_to_upgrade():
+code = ai_response_text.get(1.0, tk.END)
+new_code_text.delete(1.0, tk.END)
+new_code_text.insert(tk.END, code)
+log("✅ 代码已复制到升级框，请前往升级页面验证并升级")
+nb.select(1)
+messagebox.showinfo("提示", "代码已复制到升级框，正在跳转至升级页面...")
+def update_runtime():
+elapsed = int(time.time() - start_time)
+runtime = str(timedelta(seconds=elapsed))
+runtime_label.config(text=f"⏱️ 已运行: {runtime}")
+root.after(1000, update_runtime)
+ensure_dirs()
+root = tk.Tk()
+root.title(f"LocalB v{VERSION} | 每日自动备份版")
+root.geometry("1200x800")
+nb = ttk.Notebook(root)
+nb.pack(fill="both", expand=True, padx=10, pady=10)
+f1 = ttk.Frame(nb)
+nb.add(f1, text="控制台")
+ttk.Label(f1, text="控制面板", font=("Arial", 14, "bold")).pack(pady=10)
+runtime_label = ttk.Label(f1, text="⏱️ 已运行: 0:00:00", font=("Consolas", 12), foreground="blue")
+runtime_label.pack(pady=5)
+ttk.Label(f1, text="🆕 新增功能: 每日凌晨2点自动备份记忆文件", foreground="green", font=("Arial", 10, "bold")).pack(pady=5)
+bf = ttk.Frame(f1)
+bf.pack(pady=5)
+start_btn = ttk.Button(bf, text="启动轮询", command=start_polling)
+start_btn.pack(side="left", padx=5)
+stop_btn = ttk.Button(bf, text="停止轮询", command=stop_polling, state="disabled")
+stop_btn.pack(side="left", padx=5)
+status_label = ttk.Label(f1, text="准备就绪")
+status_label.pack(pady=5)
+log_text = scrolledtext.ScrolledText(f1, height=25, font=("Consolas", 9))
+log_text.pack(fill="both", expand=True, padx=10)
+f2 = ttk.Frame(nb)
+nb.add(f2, text="自我迭代")
+ttk.Label(f2, text="新版本代码:", font=("Arial", 12)).pack(pady=10)
+new_code_text = scrolledtext.ScrolledText(f2, height=20, font=("Consolas", 9))
+new_code_text.pack(fill="both", expand=True, padx=10)
+bf2 = ttk.Frame(f2)
+bf2.pack(pady=10)
+ttk.Button(bf2, text="验证语法", command=lambda: messagebox.showinfo("验证结果", validate_syntax(new_code_text.get(1.0, tk.END))[1])).pack(side="left", padx=5)
+ttk.Button(bf2, text="开始升级", command=lambda: do_windows_self_upgrade(new_code_text.get(1.0, tk.END))).pack(side="left", padx=5)
+f3 = ttk.Frame(nb)
+nb.add(f3, text="AI大脑（千问）")
+ttk.Label(f3, text="🤖 千问AI大脑 - 输入需求生成完整升级代码", font=("Arial", 14, "bold")).pack(pady=10)
+ttk.Label(f3, text="输入你的需求：", font=("Arial", 10)).pack(pady=5)
+ai_prompt_text = scrolledtext.ScrolledText(f3, height=5, font=("Consolas", 10))
+ai_prompt_text.pack(fill="x", padx=10, pady=5)
+ai_prompt_text.insert(tk.END, "给LocalB加一个每天凌晨2点自动备份记忆文件的功能")
+bf3 = ttk.Frame(f3)
+bf3.pack(pady=10)
+ttk.Button(bf3, text="🚀 让千问写代码", command=call_qwen_api, width=20).pack(side="left", padx=5)
+ttk.Button(bf3, text="📋 复制到升级框", command=copy_to_upgrade, width=20).pack(side="left", padx=5)
+ttk.Label(f3, text="AI生成的代码：", font=("Arial", 10)).pack(pady=5)
+ai_response_text = scrolledtext.ScrolledText(f3, height=25, font=("Consolas", 9))
+ai_response_text.pack(fill="both", expand=True, padx=10)
+log(f"✅ LocalB v{VERSION} 启动完成！")
+log(f"✅ 所有文件操作已使用 encoding='utf-8'")
+log(f"✅ Windows标准升级流程已就绪")
+log(f"✅ 升级失败自动回滚已就绪")
+log(f"✅ 千问完整代码上下文已就绪")
+log(f"✅ 🆕 每日凌晨2点自动备份功能已就绪")
+log(f"🚀 现在正在轮询GitHub，等待SELF_UPGRADE指令！")
+update_runtime()
+root.mainloop()"
 }
